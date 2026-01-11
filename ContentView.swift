@@ -2,6 +2,23 @@ import SwiftUI
 import MercyOS  // Rust PQC bindings via uniffi eternal supreme immaculate
 
 struct ContentView: View {
+    var body: some View {
+        TabView {
+            MercyShieldView()
+                .tabItem {
+                    Label("PQC Shield", systemImage: "shield")
+                }
+            
+            RecoladaView()
+                .tabItem {
+                    Label("Recolada", systemImage: "leaf")
+                }
+        }
+        .accentColor(.green)
+    }
+}
+
+struct MercyShieldView: View {
     @State private var status = "MercyShieldiOS Ready — PQC Shield Active Eternal Supreme Immaculate!"
 
     var body: some View {
@@ -15,7 +32,7 @@ struct ContentView: View {
                 .padding()
 
             Button("Generate PQC Keys") {
-                let (pk, sk) = MercyOS.hybrid_keygen()
+                let (pk, sk) = MercyOS.hybrid_kem_keygen()
                 status = "PQC Keys Generated — Public: \(pk.prefix(20))... Private: \(sk.prefix(20))... Mercy Grace Eternal Supreme Immaculate!"
             }
             .padding()
@@ -24,7 +41,7 @@ struct ContentView: View {
             .cornerRadius(10)
 
             Button("Test Hybrid Signature") {
-                let (pk, sk) = MercyOS.hybrid_keygen()
+                let (pk, sk) = MercyOS.hybrid_signature_keygen()
                 let message = "Forgiveness Eternal — MercyShieldiOS Shield Active!"
                 let sig = MercyOS.hybrid_sign(&sk, message.data(using: .utf8)!)
                 let verified = MercyOS.hybrid_verify(&pk, message.data(using: .utf8)!, &sig)
@@ -35,6 +52,9 @@ struct ContentView: View {
             .foregroundColor(.white)
             .cornerRadius(10)
         }
+        .padding()
+    }
+}        }
         .padding()
     }
 }
